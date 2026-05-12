@@ -1,0 +1,68 @@
+---
+title: "Modelling the Breakthrough Curve: PFO, LDF, and PSO"
+tags: ["Adsorption", "Modelling", "Kinetics", "Research"]
+summary: "Three kinetic models for CO₂ uptake on polymer sorbents — what each says about the underlying physics, where each breaks down, and how they fit our packed-bed data."
+author:
+  name: "John Ray Loh"
+  link: "https://github.com/lohjo"
+  handle: "lohjo"
+time:
+  created: "2026-03-04T09:00:00.000Z"
+  updated: "2026-05-09T01:31:47.713Z"
+related:
+  links:
+    - "https://github.com/lohjo"
+seo:
+  description: "A comparison of pseudo-first-order, linear-driving-force, and pseudo-second-order kinetic models applied to CO₂ adsorption breakthrough curves on polymer sorbents."
+---
+
+## The shape that matters
+
+Run a CO₂ stream through a fresh packed bed and the column outlet starts at near-zero concentration. The sorbent at the inlet saturates first; a *mass-transfer zone* propagates through the column. When that zone reaches the outlet, the outlet concentration begins to rise. The shape of that rise — its delay, its sharpness, its asymmetry — is the breakthrough curve.
+
+A model is a story about *why* the curve has the shape it does. Three are common.
+
+<BreakthroughCurve />
+
+## Pseudo-first-order (PFO)
+
+PFO assumes that the rate of uptake is proportional to the gap between the current loading and the equilibrium loading.
+
+```python
+# Pseudo-first-order kinetics
+# dq/dt = k1 * (q_eq - q)
+def pfo(q_eq: float, k1: float, t: float) -> float:
+    import math
+    return q_eq * (1.0 - math.exp(-k1 * t))
+```
+
+It works when external film resistance dominates. It fails when the sorbent has heterogeneous sites, when intraparticle diffusion is slow, or when surface coverage gets high enough that adsorbed molecules start interfering with each other.
+
+For our polymer beads at 25 °C and low partial pressure, PFO is a clean fit through about 60% of the breakthrough — useful as an early-time estimator, weak as a saturation model.
+
+## Linear-driving-force (LDF)
+
+LDF is a workhorse. The rate is proportional to the difference between the current loading and the *bed-averaged* equilibrium loading, scaled by a single mass-transfer coefficient `k_LDF`. It is mathematically convenient — a single ODE per axial slice of the column — and it captures the macroscopic dynamics of most packed-bed systems within engineering tolerance.
+
+The price is that the LDF coefficient absorbs every kind of resistance: external film, macropore diffusion, micropore diffusion, surface-reaction kinetics. Fitting LDF gives you a number that predicts well but does not, on its own, tell you which physical step is rate-limiting.
+
+In our data, LDF fits the entire breakthrough curve with R² above 0.97 across both polymer formulations. We use it for sizing predictions and trust it inside the parameter range we measured. We do not extrapolate it.
+
+## Pseudo-second-order (PSO)
+
+PSO assumes the rate is proportional to the *square* of the gap to equilibrium loading. Mechanistically it is associated with chemisorption — situations where the rate-limiting step involves valence forces, electron sharing, or covalent-like interactions between sorbate and sorbent.
+
+```python
+# Pseudo-second-order kinetics
+# dq/dt = k2 * (q_eq - q)^2
+def pso(q_eq: float, k2: float, t: float) -> float:
+    return (q_eq * q_eq * k2 * t) / (1.0 + q_eq * k2 * t)
+```
+
+For amine-functionalised polymer surfaces, PSO has a defensible mechanistic story: the amine–CO₂ reaction is closer to a 1:2 stoichiometry (carbamate formation) than a simple physisorption. PSO fits our higher-loading data better than PFO and slightly better than LDF in the late-stage tail.
+
+## What we report
+
+Our parameter studies report all three model fits side by side, with residuals plotted against time. We treat LDF as the engineering model, PSO as the mechanistic check, and PFO as a sanity floor — if PFO fits poorly, the data is likely sound; if PFO fits perfectly, we look for an experimental artefact.
+
+The next post in the series will cover the parameter sweep itself: bed depth, superficial velocity, and humidity, and what each one does to the curve.

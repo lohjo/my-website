@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://lohjohnray.com
+
+# Sitemaps
+Sitemap: https://lohjohnray.com/sitemap.xml

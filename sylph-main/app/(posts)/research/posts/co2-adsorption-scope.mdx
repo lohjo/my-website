@@ -1,0 +1,52 @@
+---
+title: "CO₂ Adsorption in Packed-Bed Columns: Project Scope"
+tags: ["DAC", "Adsorption", "Polymer Sorbents", "Packed-Bed", "Research"]
+summary: "An introduction to the research project: studying CO₂ capture on polymer-based sorbents in a packed-bed column, framed against the broader Direct Air Capture problem."
+author:
+  name: "John Ray Loh"
+  link: "https://github.com/lohjo"
+  handle: "lohjo"
+time:
+  created: "2026-01-22T09:00:00.000Z"
+  updated: "2026-05-09T01:31:47.713Z"
+related:
+  links:
+    - "https://github.com/lohjo"
+seo:
+  description: "Project scope for a CO₂ adsorption research project: packed-bed columns, polymer-based sorbents, breakthrough-curve modelling, and Direct Air Capture context."
+---
+
+## What we are studying
+
+Direct Air Capture (DAC) is the technology stack that removes CO₂ directly from the atmosphere — distinct from point-source capture at a power plant or cement kiln. The atmospheric concentration of CO₂ is around 420 ppm, roughly two orders of magnitude lower than a typical flue gas. That dilution sets the ceiling on every other parameter: sorbent capacity, regeneration energy, capital intensity per tonne removed.
+
+Our project sits inside that constraint. We work on a small **packed-bed column** loaded with **polymer-based sorbents**, run a controlled CO₂ stream through it, and study how the sorbent saturates over time. The output is a *breakthrough curve* — concentration of CO₂ at the column outlet as a function of time. Everything we want to know about the sorbent and the process is encoded in the shape of that curve.
+
+## Why polymer sorbents
+
+The dominant sorbents in commercial DAC today are amine-functionalised solid supports. They have high CO₂ affinity but degrade in the presence of trace oxygen and moisture, which limits cycle life. Polymer-based sorbents — particularly amine-grafted polystyrene resins and polyethyleneimine-impregnated polymer beads — are a complementary family with different trade-offs: somewhat lower equilibrium capacity, but better mechanical robustness, lower regeneration temperature, and a manufacturing pipeline that resembles ion-exchange resin production.
+
+The specific question we want to answer: under realistic ambient conditions, what is the most useful operating envelope for a packed bed of these polymer sorbents, and how do parameter changes (flow rate, bed depth, particle size, humidity) propagate through the breakthrough curve?
+
+## What "useful" means
+
+Useful to us means three things:
+
+1. A **mass-transfer-coefficient estimate** that we trust enough to feed into a sizing calculation.
+2. A **breakthrough time prediction** that lands within ±15% across the parameter range we tested.
+3. A **regeneration model** that tells us how much of the sorbent capacity is recoverable per cycle.
+
+These are modest goals at the scale of an undergraduate research project. They are also non-trivial — the literature is fragmented, much of it German and Dutch, and the modelling conventions differ across labs.
+
+## Where we are
+
+The bench rig is built. Initial breakthrough runs have been recorded for two polymer formulations at 25 °C. Curve-fitting is underway against pseudo-first-order (PFO), linear-driving-force (LDF), and pseudo-second-order (PSO) models. The next post in this series goes deep on those models — what each one is actually saying about the underlying physics, and where each one breaks down.
+
+## Reading list
+
+A small bibliography that has shaped our framing:
+
+- Glueckauf, *Theory of chromatography*, Trans. Faraday Soc., 1955.
+- Sircar & Hufton, *Why does the linear driving force model for adsorption kinetics work?*, Adsorption, 2000.
+- Wurzbacher et al., *Concurrent separation of CO₂ and H₂O from air by a temperature-vacuum swing adsorption process*, ES&T, 2012.
+- A 1997 dissertation from TU Berlin on amine-grafted polymer sorbents — German, hand-translated and re-typeset for our reference database.

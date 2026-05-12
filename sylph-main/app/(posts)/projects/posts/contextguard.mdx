@@ -1,0 +1,47 @@
+---
+title: "ContextGuard — Misinformation Defence in the Browser"
+tags: ["Next.js", "TypeScript", "Browser Extension", "Civic Tech"]
+summary: "A browser-native credibility layer that surfaces source quality and contradicting evidence inline on news articles, designed for non-technical readers."
+author:
+  name: "John Ray Loh"
+  link: "https://github.com/lohjo"
+  handle: "lohjo"
+time:
+  created: "2025-09-08T09:00:00.000Z"
+  updated: "2026-05-09T01:31:47.707Z"
+media:
+  image: "/images/contextguard-cover.png"
+related:
+  links:
+    - "https://github.com/lohjo"
+seo:
+  description: "ContextGuard is a Next.js + TypeScript browser extension that surfaces source credibility and contradicting evidence inline on news articles, designed for non-technical readers."
+---
+
+## The thesis
+
+Most fact-checking happens *after* a reader has formed a belief. ContextGuard is built on the opposite premise: the moment of friction is the moment a claim is being read. Surface the context there, in the article itself, and the reader does not need to decide to verify — they verify by default.
+
+## What it does
+
+When a reader lands on a news article, ContextGuard performs three operations in the page:
+
+1. **Source profile.** Resolves the publisher, ownership, ideological positioning (where known), correction history, and whether the source has retracted similar claims. Renders as a small inline card next to the byline.
+2. **Claim extraction.** Highlights factual claims at sentence granularity. Each highlight is hoverable.
+3. **Contradicting evidence.** For each claim, surfaces the strongest contradicting article from a curated index, filtered by recency and source diversity.
+
+The UX rule is *one badge, one decision*. No dashboards, no sidebar that demands attention. The reader either ignores the inline card and reads on, or hovers and sees more.
+
+## Decisions for non-technical readers
+
+Building for non-technical readers means refusing to show your work.
+
+- No confidence percentages. They imply false precision and feel adversarial.
+- No "AI-generated" labels for opinion pieces. Genre confusion is a different problem from misinformation.
+- No partisan framing. The extension says *"this claim is contradicted by"* and never *"this is wrong."* The user makes the call.
+
+## Stack
+
+A Next.js + TypeScript codebase (shared between the extension popup and a small admin web), a content-script bundle that ships under 60 KB gzipped, and a server-side claim-resolution API that uses a vector index of curated outlets.
+
+The hardest engineering trade-off was deciding *not* to use an LLM at request time. Latency was unacceptable and hallucination risk was a non-starter for a tool that asks readers to trust it. The current pipeline uses an LLM offline to enrich the index, and serves precomputed contradictions at runtime.

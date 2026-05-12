@@ -1,0 +1,3 @@
+*.mdx
+/.pnpm-store
+/node_modules

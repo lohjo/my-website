@@ -1,0 +1,53 @@
+---
+title: "SENTINEL — Multimodal AI-Generated Content Detection"
+tags: ["AI", "FastAPI", "Gemini", "SEA-LION GUARD", "ClickHouse", "Cloud Run", "WXT", "Svelte"]
+summary: "A real-time, multimodal misinformation defence platform built around Google Gemini and SEA-LION GUARD, with a Chrome extension that flags AI-generated text, images, and audio inline."
+author:
+  name: "John Ray Loh"
+  link: "https://github.com/lohjo"
+  handle: "lohjo"
+time:
+  created: "2026-02-14T09:00:00.000Z"
+  updated: "2026-05-09T01:31:47.713Z"
+media:
+  image: "/images/sentinel-cover.png"
+related:
+  links:
+    - "https://github.com/lohjo"
+seo:
+  description: "SENTINEL is a multimodal AI-generated content detection platform combining FastAPI, Google Gemini, and SEA-LION GUARD, deployed on Google Cloud Run with ClickHouse analytics."
+---
+
+## Why this exists
+
+The Singapore information environment is small, multilingual, and increasingly contested. Synthetic media — generated text, deepfaked voice, AI-stylised images — is no longer a curiosity. By the time a piece of content is shared in a WhatsApp chat or surfaced through a feed, the cost of being wrong is already paid.
+
+SENTINEL is a defence layer that runs *before* a reader forms a belief. It operates on the page they are reading, not on the platform's moderation queue.
+
+## Architecture
+
+The system is split into three coordinated services.
+
+<TechStack
+  groups={[
+    { label: "Backend", items: ["FastAPI", "Pydantic", "Google Gemini API", "SEA-LION GUARD"] },
+    { label: "Extension", items: ["WXT", "Svelte", "TypeScript", "Vite"] },
+    { label: "Infra", items: ["Google Cloud Run", "ClickHouse", "Docker", "GitHub Actions"] },
+  ]}
+/>
+
+The extension performs page-level signal extraction: paragraph segmentation, image hashing, audio fingerprinting if a `<video>` or `<audio>` element is present. It batches signals into a single multipart request to a FastAPI gateway running on Cloud Run.
+
+The gateway routes requests to detection adapters. Text passes through SEA-LION GUARD for Southeast-Asian-language coverage, then a Gemini ensemble for cross-checking. Image and audio claims hit Gemini multimodal endpoints with explicit detection prompts and confidence calibration. Every verdict is written to ClickHouse for longitudinal analysis — false-positive rate by language, latency by content type, drift over time.
+
+## What I learned shipping it
+
+Three things stand out.
+
+1. **Latency budget is the product.** A reader will tolerate a 600 ms inline annotation; 1.5 s and they have already moved on. The real engineering problem was not "can we detect this," but "can we detect this in the time it takes to scroll past it." Most of the wins came from request batching, not better models.
+2. **Multilingual evaluation is non-negotiable.** Detection accuracy on English-only benchmarks does not predict accuracy on Bahasa Indonesia, Tagalog, or Singlish. SEA-LION GUARD is the only piece of the stack that handled Singlish without flattening it.
+3. **Calibration matters more than confidence.** Showing a user "92% AI-generated" and being wrong destroys trust faster than showing "uncertain" honestly. The UI now reports a *signal*, not a verdict.
+
+## Status
+
+Submitted to **Hackomania 2026** and the **Gemini Live Agent Challenge**. Source repositories are private during the judging window; will open-source after.

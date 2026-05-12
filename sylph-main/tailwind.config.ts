@@ -1,0 +1,158 @@
+import type { Config } from "tailwindcss";
+
+import plugin from "tailwindcss/plugin";
+
+const config: Config = {
+  important: true,
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./markdown/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./mdx-components.tsx",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        gray: {
+          1: "var(--gray-1)",
+          2: "var(--gray-2)",
+          3: "var(--gray-3)",
+          4: "var(--gray-4)",
+          5: "var(--gray-5)",
+          6: "var(--gray-6)",
+          7: "var(--gray-7)",
+          8: "var(--gray-8)",
+          9: "var(--gray-9)",
+          10: "var(--gray-10)",
+          11: "var(--gray-11)",
+          12: "var(--gray-12)",
+          a1: "var(--gray-a1)",
+          a2: "var(--gray-a2)",
+          a3: "var(--gray-a3)",
+          a4: "var(--gray-a4)",
+          a5: "var(--gray-a5)",
+          a6: "var(--gray-a6)",
+          a7: "var(--gray-a7)",
+          a8: "var(--gray-a8)",
+          a9: "var(--gray-a9)",
+          a10: "var(--gray-a10)",
+          a11: "var(--gray-a11)",
+          a12: "var(--gray-a12)",
+        },
+        black: {
+          a1: "var(--black-a1)",
+          a2: "var(--black-a2)",
+          a3: "var(--black-a3)",
+          a4: "var(--black-a4)",
+          a5: "var(--black-a5)",
+          a6: "var(--black-a6)",
+          a7: "var(--black-a7)",
+          a8: "var(--black-a8)",
+          a9: "var(--black-a9)",
+          a10: "var(--black-a10)",
+          a11: "var(--black-a11)",
+          a12: "var(--black-a12)",
+        },
+        white: {
+          a1: "var(--white-a1)",
+          a2: "var(--white-a2)",
+          a3: "var(--white-a3)",
+          a4: "var(--white-a4)",
+          a5: "var(--white-a5)",
+          a6: "var(--white-a6)",
+          a7: "var(--white-a7)",
+          a8: "var(--white-a8)",
+          a9: "var(--white-a9)",
+          a10: "var(--white-a10)",
+          a11: "var(--white-a11)",
+          a12: "var(--white-a12)",
+        },
+        teal: {
+          1: "var(--teal-1)",
+          2: "var(--teal-2)",
+          3: "var(--teal-3)",
+          4: "var(--teal-4)",
+          5: "var(--teal-5)",
+          6: "var(--teal-6)",
+          7: "var(--teal-7)",
+          8: "var(--teal-8)",
+          9: "var(--teal-9)",
+          10: "var(--teal-10)",
+          11: "var(--teal-11)",
+          12: "var(--teal-12)",
+        },
+        amber: {
+          1: "var(--amber-1)",
+          2: "var(--amber-2)",
+          3: "var(--amber-3)",
+          4: "var(--amber-4)",
+          5: "var(--amber-5)",
+          6: "var(--amber-6)",
+          7: "var(--amber-7)",
+          8: "var(--amber-8)",
+          9: "var(--amber-9)",
+          10: "var(--amber-10)",
+          11: "var(--amber-11)",
+          12: "var(--amber-12)",
+        },
+        accent: "var(--accent)",
+        "accent-soft": "var(--accent-soft)",
+        background: "var(--bg)",
+        foreground: "var(--fg)",
+        muted: "var(--muted)",
+        hover: "var(--hover)",
+        border: "var(--border)",
+        scrollbar: {
+          thumb: "var(--scrollbar-thumb)",
+          track: "var(--scrollbar-track)",
+        },
+        selection: {
+          background: "var(--selection-background)",
+          foreground: "var(--selection-foreground)",
+        },
+        highlight: {
+          background: "var(--highlight-background)",
+          foreground: "var(--highlight-foreground)",
+        },
+        kbd: {
+          background: "var(--kbd-background)",
+          foreground: "var(--kbd-foreground)",
+          border: "var(--kbd-border)",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
+      borderRadius: {
+        small: "var(--radius-small)",
+        base: "var(--radius-base)",
+        large: "var(--radius-large)",
+      },
+    },
+  },
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".text-small": {
+          fontSize: "12px",
+          letterSpacing: "0.01px",
+        },
+        ".text-default": {
+          fontSize: "14px",
+          lineHeight: "21px",
+          letterSpacing: "-0.09px",
+        },
+        ".font-display": {
+          fontFamily: "var(--font-serif), ui-serif, Georgia, serif",
+          fontFeatureSettings: '"ss01", "liga", "kern"',
+        },
+      });
+    }),
+  ],
+  darkMode: "class",
+};
+
+export default config;

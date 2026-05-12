@@ -1,0 +1,47 @@
+---
+title: "Lifeline — A Sub-S$10 Open-Source Blood Sampler"
+tags: ["Hardware", "OpenSCAD", "Fusion360", "CC-BY-4.0", "LMIC", "Medical"]
+summary: "A 3D-printable, vacuum-actuated blood sampler designed for disaster relief and low-resource clinical settings. Bill of materials under S$10, 4 mL capacity, no electricity required."
+author:
+  name: "John Ray Loh"
+  link: "https://github.com/lohjo"
+  handle: "lohjo"
+time:
+  created: "2025-11-20T09:00:00.000Z"
+  updated: "2026-05-09T01:31:47.707Z"
+media:
+  image: "/images/lifeline-cover.png"
+related:
+  links:
+    - "https://github.com/lohjo"
+seo:
+  description: "Lifeline is an open-source vacuum-actuated blood sampler with a microneedle array and check-valve manifold, designed for disaster and LMIC settings and released under CC-BY-4.0."
+---
+
+## The problem
+
+In a field clinic without reliable mains power, a rural maternal-health post in Vietnam, or the first 72 hours after an earthquake, the constraint is not technique — it is *equipment*. A standard vacutainer system depends on a supply chain. When that supply chain breaks, the cost of drawing 4 mL of venous blood becomes infinite.
+
+Lifeline is one answer to that constraint. It is a fully 3D-printable blood sampler, vacuum-actuated by a hand-pumped bellows, with a microneedle array, a check-valve manifold, and a sealed collection chamber.
+
+> Sub-ten-dollar bill of materials. No electricity. Reproducible from a single SD card and a desktop FDM printer.
+
+## Engineering decisions
+
+The whole design pivots on three commitments.
+
+**Vacuum from the operator's hand, not a bulb.** A silicone bellows compressed between two printed PETG plates produces ~25 kPa of negative pressure across three pumps. This is enough to fill a 4 mL chamber in 18–24 seconds at body temperature. A bulb design was 40% cheaper but unreliable across operators with smaller hand spans.
+
+**Check-valve manifold over a single duckbill.** Two opposing one-way valves, each a flexure printed in-place, eliminate the failure mode where a single valve gets fouled by a clot and the entire sample is lost. The cost is one extra hour of print time per unit.
+
+**Microneedle array, not a single 21G.** A 7×7 array of 800 µm needles distributes the puncture force, reduces patient flinching, and tolerates skin variation across paediatric to geriatric patients. The trade-off is shorter draw depth — which is acceptable for venous capture against a tourniquet, not arterial.
+
+## The CAD release
+
+All Fusion360 source files, OpenSCAD parametric variants, print profiles, sterilisation protocol, and a clinical-handling cheat-sheet are released under **CC-BY-4.0**. A field-ready PDF assembly guide is included so the design can be reproduced without internet access — only a printed sheet and the printer.
+
+The licence choice was deliberate. CC-BY-4.0 lets a hospital, an NGO, or a university lab adapt the design without needing to negotiate with us. Attribution is the only ask.
+
+## What's next
+
+A clinical-grade variant with a moulded silicone gasket (replacing the printed flexure check valve) is in design review. Field testing with a partner clinic in central Vietnam is being scoped under SAIL.
