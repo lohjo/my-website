@@ -50,21 +50,37 @@ If HEAD is on a feature branch (not `master`), still attribute commits to their 
 
 ### 2b. Claude chat history (today)
 
-- Directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\`
-- Find `.jsonl` files with `mtime >= today midnight`.
-- For each file: parse every line as JSON. Extract:
-  - `role: "user"` → `content` text.
-  - `role: "assistant"` with `tool_use` → summarise tool name + first 80 chars of input.
-- Cap output at **20 most substantive user messages** (exclude one-word replies, "ok", "yes", etc.).
-- If directory is inaccessible (remote env, wrong OS path), skip this step silently — do not abort.
+Locate the `.jsonl` project file for this repo. Create a midnight marker then search:
+
+```bash
+touch -t $(date +%Y%m%d)0000 /tmp/midnight_marker
+find ~/.claude/projects -name "*.jsonl" -newer /tmp/midnight_marker 2>/dev/null
+```
+
+On Windows the path is typically `C:\Users\<User>\.claude\projects\C--Users-<User>-Projects-GitHub-my-website\`. On Linux/macOS it is `~/.claude/projects/<encoded-repo-path>/`.
+
+For each found file, read lines and extract:
+- `role: "user"` → `content` text.
+- `role: "assistant"` with `tool_use` → summarise tool name + first 80 chars of input.
+
+Cap output at **20 most substantive user messages** — exclude one-word replies, "ok", "yes", entries under 10 characters.
+
+If no files are found or the directory is inaccessible (remote env, mismatched OS), skip this step silently — do not abort.
 
 ### 2c. Memory diffs (today)
 
-- Check for memory directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\memory\`
-- If it is a git-tracked path: `git log --since=midnight -- <memory-dir-path>`
-- Otherwise: check file `mtime` on each `*.md` in the directory.
-- Extract only memories tagged `type: project` or `type: feedback`. Ignore others to reduce noise.
-- If directory does not exist or is inaccessible, skip silently.
+```bash
+ls ~/.claude/projects/*/memory/*.md 2>/dev/null | head -20
+```
+
+For each memory file found, check `stat` mtime. If modified today, read it. Keep only memories whose content includes keywords: `project`, `feedback`, `decision`, `built`, `learned`, `changed`, `added`, `fixed`.
+
+If memories are git-tracked:
+```bash
+git log --since=midnight --name-only -- ~/.claude/projects/*/memory/
+```
+
+If no memory directory exists or is inaccessible, skip silently.
 
 ### 2d. User notes (interactive — do this last, after 2a–2c resolve)
 
