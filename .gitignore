@@ -1,7 +1,8 @@
 ﻿venv/
 .vercel
 node_modules/
-.claude/
+.claude/*
+!.claude/commands/
 .playwright-cli/
 playwright-screenshots/
 UsersUserProjectsGitHubmy-websiteplaywright-screenshots/
@@ -13,7 +14,6 @@ theme-test.js
 theme-test2.js
 section-screenshots.js
 check-links.js
-package.json
-package-lock.json
-pnpm-lock.yaml
+/package-lock.json
+/pnpm-lock.yaml
 *.code-workspace
