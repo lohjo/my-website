@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.12",
+    "@ianvs/prettier-plugin-sort-imports": "^4.0.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
