@@ -1,7 +1,8 @@
 ﻿venv/
 .vercel
 node_modules/
-.claude/
+.claude/*
+!.claude/commands/
 .playwright-cli/
 playwright-screenshots/
 UsersUserProjectsGitHubmy-websiteplaywright-screenshots/
