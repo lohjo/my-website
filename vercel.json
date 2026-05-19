@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install -g pnpm@9.1.0 && cd sylph-main && pnpm install",
-  "buildCommand": "cd sylph-main && pnpm build",
+  "installCommand": "cd sylph-main && npm install",
+  "buildCommand": "cd sylph-main && npm run build",
   "outputDirectory": "sylph-main/.next",
   "framework": "nextjs",
   "regions": ["sin1"]
