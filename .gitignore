@@ -14,7 +14,7 @@ theme-test.js
 theme-test2.js
 section-screenshots.js
 check-links.js
-package.json
-package-lock.json
-pnpm-lock.yaml
+/package.json
+/package-lock.json
+/pnpm-lock.yaml
 *.code-workspace
