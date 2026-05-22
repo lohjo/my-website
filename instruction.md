@@ -50,21 +50,30 @@ If HEAD is on a feature branch (not `master`), still attribute commits to their 
 
 ### 2b. Claude chat history (today)
 
-- Directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\`
-- Find `.jsonl` files with `mtime >= today midnight`.
-- For each file: parse every line as JSON. Extract:
+Check these paths **in order**, use the first one that exists:
+
+1. Linux (remote / WSL): `~/.claude/projects/` — find the subdirectory whose name contains `my-website` or matches the repo slug.
+2. Windows (local): `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\`
+
+Find `.jsonl` files in the matched directory with `mtime >= today midnight`.  
+For each file: parse every line as JSON. Extract:
   - `role: "user"` → `content` text.
   - `role: "assistant"` with `tool_use` → summarise tool name + first 80 chars of input.
-- Cap output at **20 most substantive user messages** (exclude one-word replies, "ok", "yes", etc.).
-- If directory is inaccessible (remote env, wrong OS path), skip this step silently — do not abort.
+
+Cap output at **20 most substantive user messages** (exclude one-word replies, "ok", "yes", etc.).  
+If neither path is accessible, skip this step silently — do not abort.
 
 ### 2c. Memory diffs (today)
 
-- Check for memory directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\memory\`
-- If it is a git-tracked path: `git log --since=midnight -- <memory-dir-path>`
-- Otherwise: check file `mtime` on each `*.md` in the directory.
-- Extract only memories tagged `type: project` or `type: feedback`. Ignore others to reduce noise.
-- If directory does not exist or is inaccessible, skip silently.
+Check these paths **in order**, use the first one that exists:
+
+1. Linux (remote / WSL): `~/.claude/projects/<project-dir>/memory/`
+2. Windows (local): `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\memory\`
+
+If the matched directory is git-tracked: `git log --since=midnight -- <memory-dir-path>`  
+Otherwise: check file `mtime` on each `*.md` in the directory.  
+Extract only memories tagged `type: project` or `type: feedback`. Ignore others to reduce noise.  
+If neither path exists or is accessible, skip silently.
 
 ### 2d. User notes (interactive — do this last, after 2a–2c resolve)
 
