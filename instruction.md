@@ -37,30 +37,48 @@ git log --since="midnight" --pretty=format:"%h %s" --name-only
 FIRST=$(git log --since="midnight" --pretty=format:"%H" | tail -1)
 [ -n "$FIRST" ] && git diff --stat ${FIRST}^..HEAD
 
-# Any PRs opened/updated today (best-effort; skip if gh not available)
+# PRs opened today (best-effort; skip if gh not available)
 gh pr list --author @me --state all --search "created:>=$(date +%Y-%m-%d)" 2>/dev/null || true
+
+# For each PR number returned above, fetch its full description + review comments
+# (replace <N> with each PR number from the list above)
+gh pr view <N> --json title,body,reviews,comments 2>/dev/null || true
 ```
 
 Extract from output:
 - Commit hashes + subject lines
 - Files touched (full repo-relative paths)
 - Branch name of HEAD: `git rev-parse --abbrev-ref HEAD`
+- PR titles and body text (used as additional signal in synthesis)
 
 If HEAD is on a feature branch (not `master`), still attribute commits to their merge-target post on `master`.
 
 ### 2b. Claude chat history (today)
 
-- Directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\`
-- Find `.jsonl` files with `mtime >= today midnight`.
+Try each path in order; use the first that resolves:
+
+| Environment | Path |
+|---|---|
+| Windows (local) | `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\` |
+| Linux / web session | `~/.claude/projects/` — find subdirs whose name contains `my-website` |
+| Fallback | Skip silently if neither resolves |
+
+- Find `.jsonl` files inside the resolved directory with `mtime >= today midnight`.
 - For each file: parse every line as JSON. Extract:
   - `role: "user"` → `content` text.
   - `role: "assistant"` with `tool_use` → summarise tool name + first 80 chars of input.
 - Cap output at **20 most substantive user messages** (exclude one-word replies, "ok", "yes", etc.).
-- If directory is inaccessible (remote env, wrong OS path), skip this step silently — do not abort.
+- If no directory resolves, skip this step silently — do not abort.
 
 ### 2c. Memory diffs (today)
 
-- Check for memory directory: `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\memory\`
+Try each path in order:
+
+| Environment | Path |
+|---|---|
+| Windows (local) | `C:\Users\User\.claude\projects\C--Users-User-Projects-GitHub-my-website\memory\` |
+| Linux / web session | `~/.claude/projects/<my-website-subdir>/memory/` |
+
 - If it is a git-tracked path: `git log --since=midnight -- <memory-dir-path>`
 - Otherwise: check file `mtime` on each `*.md` in the directory.
 - Extract only memories tagged `type: project` or `type: feedback`. Ignore others to reduce noise.
@@ -235,15 +253,17 @@ Fix the root cause, re-stage the same files, and create a **new** commit (never 
 
 ---
 
-## Step 7 — Skip / abort conditions (check before touching any file)
+## Step 7 — Abort / skip conditions
 
-| Condition | Action |
-|---|---|
-| No commits today AND no chat activity AND no user notes | Print "Nothing to update." and exit cleanly. No commit. |
-| Working tree dirty at start (non-MDX changes) | Abort. Prompt user to stash/commit first. |
-| > 5 posts matched | Stop and confirm with user before continuing. |
-| Secret-like string detected in bullets | Strip + `[REDACTED]` + warn. |
-| Merge conflict on rebase | Abort rebase, preserve staged changes, report. |
+These are checked at the point in the workflow indicated, not all at pre-flight.
+
+| When | Condition | Action |
+|---|---|---|
+| **Pre-flight (Step 1)** | Working tree dirty (non-MDX changes) | Abort. Ask user to stash or commit first. |
+| **After synthesis (Step 3)** | No commits today AND no chat activity AND no user notes | Print `Nothing to update.` and exit cleanly. No commit. |
+| **After synthesis (Step 3)** | > 5 posts matched | Stop and confirm list with user before continuing. |
+| **Before staging (Step 5)** | Secret-like string detected in bullet | Strip + `[REDACTED]` + warn. Continue with redacted bullet. |
+| **During push (Step 6)** | Merge conflict on rebase | Abort rebase, preserve staged changes, report. |
 
 ---
 

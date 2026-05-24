@@ -11,7 +11,7 @@ Read `instruction.md` at the repo root. Execute the full workflow defined there 
 5. **Edit** (Step 4): apply prose updates to matched posts only.
 6. **Secret scan** (Step 5): scan every proposed bullet before staging.
 7. **Commit + push** (Step 6): stage explicit file paths, commit, push to `origin/master`.
-8. **Summarise** (Step 7/8): print the end-of-run report.
+8. **Summarise** (Step 8): print the end-of-run report. (Skip / abort conditions in Step 7 apply throughout — not just here.)
 
 ## Stop-and-ask moments (only these three)
 
